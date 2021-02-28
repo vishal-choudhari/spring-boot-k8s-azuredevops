@@ -19,8 +19,10 @@ pipeline {
     }
     stages {
         stage('Git Checkout') {
-            sh 'echo "Executing Git Clone'
-            git branch: '${gitBranch}', credentialsId: 'jenkins-git-cred', url: '${gitURL}'
+            steps{
+                sh 'echo "Executing Git Clone'
+                git branch: '${gitBranch}', credentialsId: 'jenkins-git-cred', url: '${gitURL}'
+            }
         }
         stage('Build binary') {
             steps {
@@ -28,8 +30,10 @@ pipeline {
             }
         }
         stage('SonarQube analysis') {
+            steps{
                 withSonarQubeEnv(installationName: 'My SonarQube Server') {
                     sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+                }
             }
         }
     }
